@@ -9,12 +9,25 @@ The main goal of CryptoFX is to allow create a trading online based and social p
 It should be able to automatize most of
 
 ## Technology behind
-* NodeJS (trying to use last NodeJS tech -> node.green)
-* MongoDB or LokiJS ?
+* **NodeJS** (trying to use last NodeJS tech -> node.green)
+* **Bluebird** - Optimized promise library
+* **asyncawait** - Callback heaven for Node.js with async/await
+* **moment** - Parse, validate, manipulate, and display dates in javascript.
+* MongoDB/LokiJS (to be defined),actual : In-Mem db ?
+
+## Install
+```npm install```
+
+## Testing 
+```node tests/test.js```
+
+## Start 
+```node main.js```
 
 ## Main Features implemented
 
 * Get data from Bittrex API
+* Populate tick in MIB Db.
 
 ## Upcoming Features / Schedule
 
