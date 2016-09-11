@@ -9,22 +9,29 @@ The main goal of CryptoFX is to allow create a trading online based and social p
 It should be able to automatize most of
 
 ## Technology behind
-* NodeJS
+* NodeJS (trying to use last NodeJS tech -> node.green)
 * MongoDB or LokiJS ?
 
 ## Main Features implemented
 
-* Be able to run it on a local PC first (server will come next).
-* Be able to connect to one of the trading online platform (kraken).
-* Be able to
-*
+* Get data from Bittrex API
 
 ## Upcoming Features / Schedule
 
-*
+
+* Be able to run it on a local PC first (server will come next).
+* Be able to connect to one of the trading online platform (kraken).
+* Be able to gives instructions, modify a parameter using command line
+* Be able to do same than above using an admistration interface
+* Be able to use it in a meteor app
+* Create an API
+* Store data in a Raw Database
+* Handle data from raw DB and analyze them in another db (treated db)
 * In-browser graph (tradingview/meta-trader style)
-*
-*
+* VirtualWallet
+* RealWallet
+* Indicators
+* WebBased interface
 
 ## Contact
 
