@@ -104,6 +104,7 @@ const MIB = {
             return lastPrice;
         }
         return {
+            marketName:marketName,
             price:lastPrice,
             time:moment(lastTime).format("YYYY-MM-DD HH:mm:ss")
         };

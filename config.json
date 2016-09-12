@@ -1,0 +1,6 @@
+{
+    "MIB":{
+        "host":"localhost",
+        "port":10001
+    }
+}
