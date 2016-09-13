@@ -13,6 +13,7 @@ It should be able to automatize most of
 * **Bluebird** - Optimized promise library
 * **asyncawait** - Callback heaven for Node.js with async/await
 * **moment** - Parse, validate, manipulate, and display dates in javascript.
+* **ws** - Lightning fast websocket
 * MongoDB/LokiJS (to be defined),actual : In-Mem db ?
 
 ## Install
@@ -22,7 +23,25 @@ It should be able to automatize most of
 ```node tests/test.js```
 
 ## Start 
-```node main.js```
+On windows :
+ - Navigate to root ```cd CryptoFX```
+ - Start CMD ```"bin/win/start_all.bat"
+ It will then open one CMD per node(microservices)
+
+## MicroServices 
+- MIB : Mainly used as a tick store
+- MAB : Mainly used to store analyzed tick. These ticks are stored using SmartAnalyst (Indicators:RSI, MACD...)
+- CARL : Not fully defined, now it's calling bittrex API and send data to MIB. It will make a bridge
+between MIB and MAT for sometimes.
+
+To be born : 
+
+- PriceFetcher : Call API and send data to MIB
+- SmartAnalyst : Get data from MIB, analyze them, compute them in terms of tickframe and send it to MAB
+- TradingOperator : Able to Buy or Sell
+- WalletManager : Able to handle Wallet (virtual ?)
+- CryptoStrategist : Understand strategy and signals.
+
 
 ## Main Features implemented
 

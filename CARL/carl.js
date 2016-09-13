@@ -28,17 +28,28 @@ var connectMIB = function () {
                     {
                         "type":"ticker",
                         "data":{
-                            "pair":"BTC-DGB",
+                            "pair":"btc-dgb",
+                            "exchange":"bittrex",
                             "ask":0.00000059,
                             "bid":0.00000058,
                             "last":0.00000059
                         }
                     }
                 ));
+                MIBSocket.send(JSON.stringify(
+                    {
+                        "type":"MIBData",
+                        "data":{
+                            "action":"getLastPrice",
+                            "exchange":"bittrex",
+                            "pair":"btc-dgb"
+                        }
+                    }
+                ));
                 //Send string
                 // MIBSocket.send("ping");
             }
-        },1*1000)
+        },1*1000)//From first analysis, we don't handle more than a tick per 50ms
     });
     MIBSocket.on('close',function(e){
         var reconnectInterval = (reconnectAttempt==0)? reconnectDefaultInterval:(reconnectAttempt*reconnectFailedInterval);

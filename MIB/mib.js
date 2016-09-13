@@ -1,3 +1,4 @@
+var objectHelper = require('../helpers/objectHelper.js');
 var moment = require('moment');
 /**
  * Used to manage the population of MIB (Manager d'information brutes -> Raw information manager)
@@ -12,6 +13,9 @@ const MIB = {
     },
     displayDatabase: function () {
         cl(MIB.database);
+    },
+    getDatabaseSize: function () {
+        return objectHelper.formatByteSize(objectHelper.sizeof(MIB.database), true);
     },
     createExchange: function (exchangeName) {
         var exchange = {
@@ -76,38 +80,46 @@ const MIB = {
         var bid = data.bid;
         var ask = data.ask;
         
-        if(!MIB.isMarketExist(exchangeName, marketName)) {
+        if (!MIB.isMarketExist(exchangeName, marketName)) {
             MIB.createMarket(exchangeName, marketName)
         }
         var market = MIB.getMarket(exchangeName, marketName);
         var now = moment().valueOf();
-        market.last ={
-            price:last,
-                timestamp:now
+        market.last = {
+            price: last,
+            timestamp: now
         };
         market.history.push({
-            last:last,
-            bid:bid,
-            ask:ask,
-            timestamp:now
+            last: last,
+            bid: bid,
+            ask: ask,
+            timestamp: now
         })
         
     },
-    getLastPrice:function (exchangeName, marketName, giveTime) {
-        if(!MIB.isMarketExist(exchangeName, marketName)) {
+    getLastPrice: function (exchangeName, marketName, giveTime) {
+        if (!MIB.isMarketExist(exchangeName, marketName)) {
             MIB.createMarket(exchangeName, marketName)
         }
         var market = MIB.getMarket(exchangeName, marketName);
-        var lastPrice = market.last.price;
-        var lastTime = market.last.timestamp;
-        if(!giveTime){
-            return lastPrice;
+        if (market) {
+            if (market.last) {
+                var lastPrice = market.last.price;
+                var lastTime = market.last.timestamp;
+                if (!giveTime) {
+                    return lastPrice;
+                }
+                return {
+                    marketName: marketName,
+                    price: lastPrice,
+                    time: moment(lastTime).format("YYYY-MM-DD HH:mm:ss")
+                };
+            }
+            return null;
+            
         }
-        return {
-            marketName:marketName,
-            price:lastPrice,
-            time:moment(lastTime).format("YYYY-MM-DD HH:mm:ss")
-        };
+        return null;
+        
         
     }
 };
