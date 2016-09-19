@@ -27,6 +27,7 @@
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
     "requestify": "^0.2.3",
+    "seneca": "^3.1.0",
     "ws": "^1.1.1"
   },
   "devDependencies": {
