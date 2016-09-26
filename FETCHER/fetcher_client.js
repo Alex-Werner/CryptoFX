@@ -15,13 +15,16 @@ seneca.client({
     type: 'http',
     port: 12121,
     host: 'localhost',
-    // pin: 'role:foo'
 });
-var fetchIntervalTimeSeconds = 60; //Every 60 seconds
+var config = {
+    startingNow:false,
+    waitForPlain:"minute",//hour or minute
+    fetchIntervalTimeSeconds:60
+};
 var fillerInterval;
 seneca.ready(function () {
-    console.log("FETCHER CLIENT LOADED");
-    
+    console.log("FETCHER CLIENT LOADED \n");
+    console.log("Config is ", config,'\n');
     var startFetching = function () {
         return async(function () {
             var marketSum = await(API.bittrex.publicAPI.getMarketSummaries()).result;
@@ -37,10 +40,7 @@ seneca.ready(function () {
                 }
                 ;
             });
-            
-            
             cl('----- Starting \n');
-            
             /* Fetch BITTREX */
             if(arrayOfPairToFill && Array.isArray(arrayOfPairToFill) && (arrayOfPairToFill.length==10) && (arrayOfPairToFill).indexOf(undefined)==-1) {
                 var arrOfPromises = [];
@@ -81,10 +81,19 @@ seneca.ready(function () {
                 // Later.date.localTime();// Later.setInterval(executeFetchBittrex, scheduleParsed);
                 
                 var _m = moment();var ts = _m.valueOf();
-                var startAt = moment().add(1, 'hour').startOf('hour').valueOf();
-                // var startAt = moment().add(1, 'minute').startOf('minute').valueOf();
-                
+                var startAt = ts;
+                if(!config.startingNow){
+                    if(config.waitForPlain=="hour"){
+                        startAt = moment().add(1, 'hour').startOf('hour').valueOf();
+                    }
+                    if(config.waitForPlain=="minute"){
+                        startAt = moment().add(1, 'minutes').startOf('minutes').valueOf();
+                    }
+                }
                 var diff = startAt-ts;//Number of milliseconds before a start
+                if(config.startingNow){
+                    diff=0;
+                }
                 cl("Will start at",moment(startAt).format('YYYY-MM-DD HH:mm:ss'), "in", (diff/1000),"sec");
                 
                 //Will execute that at the first next plain hours
@@ -92,8 +101,8 @@ seneca.ready(function () {
                 setTimeout(function(){
                     cl('First exec done at ', moment().format('YYYY-MM-DD HH:mm:ss'));
                     executeFetchBittrex();
-                    cl('Next exec at ', moment().add(fetchIntervalTimeSeconds/1000,'second').format('YYYY-MM-DD HH:mm:ss'));
-                    fillerInterval=setInterval(executeFetchBittrex, fetchIntervalTimeSeconds*1000);
+                    cl('Next exec at ', moment().add(config.fetchIntervalTimeSeconds/1000,'second').format('YYYY-MM-DD HH:mm:ss'));
+                    fillerInterval=setInterval(executeFetchBittrex, config.fetchIntervalTimeSeconds*1000);
                 },diff);
             }else{
                 cl("\n[ERROR]: We've got wrong array");
