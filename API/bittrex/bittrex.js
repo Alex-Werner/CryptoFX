@@ -1,11 +1,16 @@
 var moment = require('moment');
 var requestify = require('requestify');
+var request = require('request');
 var Promise = require('bluebird');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 //https://bittrex.com/Home/Api
 var bittrexApiUrl = "https://bittrex.com/api/v1.1/";
+
+var requester = {
+    
+};
 
 var Bittrex = {
     _get:function(url){
@@ -15,6 +20,18 @@ var Bittrex = {
                resolve(res.getBody());
            }) 
         });
+    },
+    _post:function(url, postData){
+        return new Promise(function (resolve, reject) {
+            request.post(url, {json:postData},
+            function(error, response, body){
+                if(!error && response.statusCode==200){
+                    resolve(body);
+                }else{
+                    reject(response);
+                }
+            })
+        })
     },
     accountAPI:{
         
@@ -73,7 +90,9 @@ var Bittrex = {
                     var postData = {
                         market:pair.toLowerCase()
                     };
-                    return await(requestify.post(url,postData)).getBody();
+                  
+                    return await(Bittrex._post(url, postData));
+                    
             })();
         },
         /**

@@ -1,6 +1,7 @@
-var Globals = require('../globals.js')
+var Globals = require('../globals.js');
 var seneca = require('seneca')();
 var MIB = require('./mib.js');
+var moment = require('moment');
 
 global['reqRoot']=Globals.reqRoot;
 global['cl']=Globals.cl;
@@ -11,15 +12,10 @@ seneca.listen({
     host: 'localhost'
 });
 
-seneca.ready(function (t) {
-    console.log("MIB LOADED");    
+seneca.ready(function () {
+    cl("MIB LOADED");    
     seneca.add({role: 'MIB', store: 'ticker'}, function (request, reply) {
-        console.log(request.pair);
-        console.log(request.exchange);
-        console.log(request.ask);
-        console.log(request.last);
-        console.log(request.bid);
-    
+        cl(moment().format('HH:mm:ss')+"Added"+request.pair+"-"+request.exchange+" last:"+request.last);
         if(request.pair && request.exchange && request.ask && request.last && request.bid){
             MIB.populate('ticker',{
                 pair:request.pair,
@@ -32,17 +28,35 @@ seneca.ready(function (t) {
         }
     });
     seneca.add({role:"MIB", get:'lastPrice'},function(request, reply){
-        console.log(request.pair);
-        console.log(request.exchange);
-        reply(null, {response:"Done",lastPrice: MIB.getLastPrice(request.exchange, request.pair, true)})
-    })
+        cl(request.pair);
+        cl(request.exchange);
+        reply(null, 
+            {
+                response:"Done",
+                lastPrice: MIB.getLastPrice(request.exchange, request.pair, true)
+            })
+    });
+    seneca.add({role:"MIB", get:'listAll'},function (request, reply) {
+        reply(null,
+            {
+                response:"Done",
+                list: MIB.getListAll()
+            })
+    });
+    seneca.add({role:"MIB", get:'database'},function(request, reply){
+        var db = MIB.getDatabase();
+        reply(null,{
+            response:"Done",
+            database:db
+        })
+    });
 });
 process.on('SIGINT', () => {
     seneca.close((err) => {
-        if (err) console.log(err)
-        else console.log('close complete!')
-    })
-    console.log('Received SIGINT.  Press Control-D to exit.');
+        if (err) cl(err);
+        else cl('close complete!')
+    });
+    cl('Received SIGINT.  Press Control-C again to exit.');
 });
 
 

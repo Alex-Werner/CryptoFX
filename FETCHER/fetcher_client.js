@@ -1,4 +1,4 @@
-var Globals = require('../globals.js')
+var Globals = require('../globals.js');
 var seneca = require('seneca')();
 var Promise = require('bluebird');
 var async = require('asyncawait/async');
@@ -11,20 +11,20 @@ global['reqRoot'] = Globals.reqRoot;
 global['cl'] = Globals.cl;
 
 var API = reqRoot('../API/api.js');
-seneca.client({
+var MIBConnect = seneca.client({
     type: 'http',
     port: 12121,
     host: 'localhost',
 });
 var config = {
-    startingNow:false,
+    startingNow:true,
     waitForPlain:"minute",//hour or minute
     fetchIntervalTimeSeconds:60
 };
 var fillerInterval;
-seneca.ready(function () {
-    console.log("FETCHER CLIENT LOADED \n");
-    console.log("Config is ", config,'\n');
+MIBConnect.ready(function () {
+    cl("[FETCHER] Connected to MIB \n");
+    cl("Config is ", config,'\n');
     var startFetching = function () {
         return async(function () {
             var marketSum = await(API.bittrex.publicAPI.getMarketSummaries()).result;
@@ -38,7 +38,6 @@ seneca.ready(function () {
                 if (market.BaseVolume) {
                     arrayOfPairToFill.push(market.MarketName)
                 }
-                ;
             });
             cl('----- Starting \n');
             /* Fetch BITTREX */
@@ -50,27 +49,31 @@ seneca.ready(function () {
                     arrOfPromises.push([pair,promise]);
                 });
                 var executeFetchBittrex = function(){
-                    cl("Execute fetch at ", moment().format('YYYY-MM-DD HH:mm:ss'));
+                    cl("Executed fetch at ", moment().format('YYYY-MM-DD HH:mm:ss'));
                     _.each(arrOfPromises, function (arr) {
                         var pair = arr[0];
                         var promise = arr[1];
+                        
                         promise.then(function (response) {
                             if (response.success) {
                                 var result = response.result;
-                                seneca.act({
-                                    role: 'MIB',
-                                    store: 'ticker',
-                                    pair: pair,
-                                    exchange: 'bittrex',
-                                    ask: result.Ask,
-                                    bid: result.Bid,
-                                    last: result.Last
-                                }, function (err, result) {
-                                    if (err) return console.error(err);
-                                    // result.now = moment().format('YYYY-MM-DD HH:mm:ss');
-                                    // result.pair = pair;
-                                    // console.log("res:", result);
-                                })
+                                if(pair && result && result.Ask && result.Bid && result.Last){
+                                    cl(response)
+                                    MIBConnect.act({
+                                        role: 'MIB',
+                                        store: 'ticker',
+                                        pair: pair,
+                                        exchange: 'bittrex',
+                                        ask: result.Ask,
+                                        bid: result.Bid,
+                                        last: result.Last
+                                    }, function (err, result) {
+                                        if (err) return console.error(err);
+                                        result.now = moment().format('YYYY-MM-DD HH:mm:ss');
+                                        // result.pair = pair;
+                                        // console.log("res:", result);
+                                    }) 
+                                }
                             }
                         })
                     });
@@ -139,9 +142,13 @@ seneca.ready(function () {
 process.on('SIGINT', () => {
     clearInterval(fillerInterval);
     seneca.close((err) => {
-        if (err) console.log(err)
-        else console.log('close complete!')
+        if (err){
+            cl(err);
+        }
+        else {
+            cl('close complete!');
+        }
         process.exit(0);
     });
-    console.log('Received SIGINT.  Press Control-D to exit.');
+    cl('Received SIGINT.  Press Control-C again to exit.');
 });

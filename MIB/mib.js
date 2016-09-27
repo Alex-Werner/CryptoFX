@@ -14,13 +14,16 @@ const MIB = {
     displayDatabase: function () {
         cl(MIB.database);
     },
+    getDatabase: function () {
+        return MIB.database;
+    },
     getDatabaseSize: function () {
         return objectHelper.formatByteSize(objectHelper.sizeof(MIB.database), true);
     },
     createExchange: function (exchangeName) {
         var exchange = {
             exchange: exchangeName,
-            markets: []
+            markets: {}
         };
         MIB.database[exchangeName] = exchange;
         cl('Created exchange', exchangeName);
@@ -52,7 +55,7 @@ const MIB = {
         exchange.markets[marketName] = market;
         // MIB.createMarket(exchangeName, marketName);
         
-        cl('Try to create market', marketName, 'of', exchangeName);
+        cl('Created market', marketName, 'of', exchangeName);
     },
     getMarket: function (exchangeName, marketName) {
         var hasExchange = MIB.database.hasOwnProperty(exchangeName);
@@ -65,6 +68,20 @@ const MIB = {
             return false;
         }
         return exchange.markets[marketName];
+    },
+    addToMarket:function(exchangeName, marketName, lastObj, historyObj){
+        var hasExchange = MIB.isExchangeExist(exchangeName);
+        if (!hasExchange) {
+            return false;
+        }
+        var hasMarket = MIB.isMarketExist(exchangeName, marketName);
+        if (!hasMarket) {
+            return false;
+        }
+        
+        MIB.database[exchangeName].markets[marketName].last = lastObj;
+        MIB.database[exchangeName].markets[marketName].history.push(historyObj);
+        return true;
     },
     isMarketExist: function (exchange, pair) {
         if (!MIB.getMarket(exchange, pair)) {
@@ -83,19 +100,30 @@ const MIB = {
         if (!MIB.isMarketExist(exchangeName, marketName)) {
             MIB.createMarket(exchangeName, marketName)
         }
-        var market = MIB.getMarket(exchangeName, marketName);
         var now = moment().valueOf();
-        market.last = {
+        var lastObj = {
             price: last,
             timestamp: now
         };
-        market.history.push({
+        var historyObj = {
             last: last,
             bid: bid,
             ask: ask,
             timestamp: now
-        })
+        };
+        MIB.addToMarket(exchangeName, marketName, lastObj, historyObj);
         
+    },
+    getListAll: function () {
+        // cl(MIB.database);
+        var list = {};
+        for (var exchange in MIB.database) {
+            list[exchange] = [];
+            for (var market in MIB.database[exchange].markets) {
+                list[exchange].push(market);
+            }
+        }
+        return list;
     },
     getLastPrice: function (exchangeName, marketName, giveTime) {
         if (!MIB.isMarketExist(exchangeName, marketName)) {
