@@ -34,9 +34,13 @@ var getDatabase = function(){
         get:'database'
     },function(err, result){
         if(err) return console.error(err);
+        // cl(result.database.poloniex.markets['BTC_XMR']);
             MAB.initDatabaseFromList(result.database);
+            MAB.performCalculation();        
             
-            cl(MAB.database['bittrex'].markets['BTC-SHF'].history['30m']);
+            // cl(MAB.database['poloniex'].markets['BTC_XMR']);
+            // cl(MAB.database['poloniex'].markets['BTC_XMR'].history['1m']);
+            // cl(MAB.database['poloniex'].markets['BTC_XMR'].history['5m']);
     
         // console.log(result.database['bittrex'].markets);
     })

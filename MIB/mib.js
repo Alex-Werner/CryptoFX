@@ -96,6 +96,7 @@ const MIB = {
         var last = data.last;
         var bid = data.bid;
         var ask = data.ask;
+        var BTCVol = data.BTCVol;
         
         if (!MIB.isMarketExist(exchangeName, marketName)) {
             MIB.createMarket(exchangeName, marketName)
@@ -109,8 +110,10 @@ const MIB = {
             last: last,
             bid: bid,
             ask: ask,
-            timestamp: now
+            timestamp: now,
+            BTCVol:BTCVol
         };
+        cl(historyObj)
         MIB.addToMarket(exchangeName, marketName, lastObj, historyObj);
         
     },

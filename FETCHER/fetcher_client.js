@@ -19,12 +19,12 @@ var MIBConnect = seneca.client({
 });
 var config = {
     startingNow: true,
-    waitForPlain: "minute",//hour or minute
+    waitForPlain: "5minutes",//hour, 5minutes, minute
     fetchIntervalTimeSeconds: 60,
     markets: {
         poloniex: {
-            fetchTop: 3,//set to false to deactivate
-            fetchIntervalTimeSeconds: 30
+            fetchTop: 1,//set to false to deactivate
+            fetchIntervalTimeSeconds: 20
         }
     }
 };
@@ -134,8 +134,9 @@ var startBittrexFetch = function () {
 
 /* Helpers */
 var startWaitForPlainLoop = function (startingNow, waitForType, fetchTimeInterval, callback) {
-    if (!startingNow || !waitForType || !callback) {
+    if (startingNow==null || !waitForType || !fetchTimeInterval ||!callback) {
         ce('Sorry, CB, Type or startingNow missing');
+        cl(startingNow, waitForType, fetchTimeInterval, callback);
     }
     var _m = moment();
     var ts = _m.valueOf();
@@ -143,6 +144,22 @@ var startWaitForPlainLoop = function (startingNow, waitForType, fetchTimeInterva
     if (!startingNow) {
         if (waitForType == "hour") {
             startAt = moment().add(1, 'hour').startOf('hour').valueOf();
+        }
+        if(waitForType=="5minutes"){
+            var lastUnit = (moment(ts).format('mm'));
+            
+            var diffInMinutes = 0;
+            if(Number(lastUnit[1])<5){
+                    diffInMinutes=5-Number(lastUnit[1]);
+            }else if(Number(lastUnit[1])==5){
+                diffInMinutes=5;
+            }else if(Number(lastUnit[1])>5){
+                diffInMinutes=10-Number(lastUnit[1]);
+            }else{
+                
+            }
+            // var diffInMinutes = ();
+            startAt = moment().add(diffInMinutes, 'minutes').startOf('minutes').valueOf();
         }
         if (waitForType == "minute") {
             startAt = moment().add(1, 'minutes').startOf('minutes').valueOf();
@@ -167,7 +184,7 @@ var perform = function (command, values) {
     if (allowedCommands.indexOf(command) > -1) {
         switch (command) {
             case "storeTicker":
-                if (!!values && !!values.ask && !!values.bid && !!values.last && !!values.pair && !!values.exchange) {
+                if (!!values && !!values.ask && !!values.bid && !!values.last && !!values.pair && !!values.exchange && !!values.BTCVol) {
                     MIBConnect.act({
                         role: 'MIB',
                         store: 'ticker',
@@ -175,7 +192,8 @@ var perform = function (command, values) {
                         exchange: values.exchange,
                         ask: values.ask,
                         bid: values.bid,
-                        last: values.last
+                        last: values.last,
+                        BTCVol: values.BTCVol
                     }, function (err, result) {
                         if (err) return console.error(err);
                         result.now = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -189,6 +207,7 @@ var perform = function (command, values) {
                         hasBid: !!values.bid,
                         hasLast: !!values.last,
                         hasPair: !!values.pair,
+                        hasBTCVol: !!values.BTCVol,
                         hasExchange: !!values.exchange
                     };
                     ce('Missing values');
@@ -210,25 +229,44 @@ var performAsync = function (commands, values) {
     })
 };
 var getTopVolume = function (object, topNumber) {
-    var topVolume = [];
-    for (var i = 0; i < topNumber; i++) {
-        topVolume.push(0);
-    }
-    for (var marketName in object) {
-        for (var i = 0; i < topNumber; i++) {
-            if (topVolume[i] < Number(object[marketName].baseVolume)) {
-                topVolume[i] = Number(object[marketName].baseVolume);
-                break;
-            }
+    var markets = _.each(object, function(obj,marketName){
+        var  marketNames = marketName.split('_');
+        if(marketNames[0]=="BTC"){
+            obj.BTCVol =Number(object[marketName].baseVolume);
+            // obj.BTCVol=0;
         }
-    }
+        if(marketNames[1]=="BTC"){
+            obj.BTCVol=Number(object[marketName].quoteVolume)
+        }
+    });
     
-    var result = {};
+    var topVolume = [];    
+    for (var marketName in markets) {
+        var BTCVol = markets[marketName].BTCVol;
+         topVolume.push(BTCVol);        
+    }
+    topVolume.sort(function(a,b){
+        return b-a;
+    });
+    topVolume = topVolume.slice(0,topNumber);
+    
+    var result = {}
     for (var i = 0; i < topVolume.length; i++) {
         var vol = topVolume[i];
+        
         for (var marketName in object) {
-            if (Number(object[marketName].baseVolume) == vol) {
-                result[marketName] = object[marketName];
+            marketNames = marketName.split('_');
+            if(marketNames[0]=="BTC"){
+                if (Number(object[marketName].baseVolume) == vol) {
+                    result[marketName] = object[marketName];
+                    result[marketName].BTCVolume= object[marketName].baseVolume;
+                }
+            }
+            if(marketNames[1]=="BTC"){
+                if (Number(object[marketName].quoteVolume) == vol) {
+                    result[marketName] = object[marketName];
+                    result[marketName].BTCVolume= object[marketName].quoteVolume;
+                }
             }
         }
     }
@@ -244,13 +282,13 @@ var startPoloniexFetch = function () {
         getAllTicks()
             .then(function (response) {
                 var result = JSON.parse(response);
-                
                 if (config.markets.poloniex.fetchTop) {
-                    if (config.markets.poloniex.fetchTop == true) {
+                    if (config.markets.poloniex.fetchTop/toString() == "true") {
                         config.markets.poloniex.fetchTop = 10;
                     }
                     result = getTopVolume(result, config.markets.poloniex.fetchTop);
                 }
+                // cl(result);
                 
                 var start = (process.hrtime()[0] * 1e3) + (process.hrtime()[1] / 1e6);
                 
@@ -269,7 +307,8 @@ var startPoloniexFetch = function () {
                         isFrozen: val.isFrozen,
                         high24hr: val.high24hr,
                         low24hr: val.low24hr,
-                        exchange: "poloniex"
+                        exchange: "poloniex",
+                        BTCVol : val.BTCVol
                     };
                     if (tick.isFrozen == 0) {
                         var promise = performAsync('storeTicker', {
@@ -277,6 +316,7 @@ var startPoloniexFetch = function () {
                             bid: tick.highestBid,
                             last: tick.last,
                             pair: tick.pair,
+                            BTCVol:val.BTCVol,
                             exchange: tick.exchange
                         });
                         
@@ -317,6 +357,8 @@ MIBConnect.ready(function () {
         return async(function () {
             
             cl('Init fetching...');
+            //Bittrex is removed. Methods is broken, need to create generic methods
+            //Plus problem with cache in Bittrex that need to be figured out :-(
             // startBittrexFetch();
             
             startPoloniexFetch();

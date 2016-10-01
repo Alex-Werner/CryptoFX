@@ -57,6 +57,7 @@ const MAB = {
             low: 0,
             high: 0,
             volume: 0,
+            BTCVol:0,
             timestamp: 0,
             techIndic: {
                 volatility: 0,
@@ -77,13 +78,16 @@ const MAB = {
             }
         };
         var processedTicks = 0;
+        var startBTCVol = 0;
+        var endBTCVol=0;
         for (_tickIndex in ticks) {
             var _tick = ticks[_tickIndex];
+            if(startBTCVol==0){startBTCVol=_tick.BTCVol;}
             if (processedTicks == 0) {
                 candle.open = _tick.last;
                 candle.low = parseFloat(_tick.bid);
             }
-            candle.mid += parseFloat((_tick.ask + _tick.bid) / 2);
+            candle.mid += parseFloat(parseFloat(_tick.bid)+parseFloat(_tick.ask - _tick.bid) / 2);
             candle.bid += parseFloat(_tick.bid);
             candle.ask += parseFloat(_tick.ask);
             candle.last = parseFloat(_tick.last);
@@ -97,19 +101,24 @@ const MAB = {
             if (candle.low > _tick.low) {
                 candle.low = _tick.low
             }
-            if (candle.low > _tick.low) {
+            if (candle.low > _tick.last) {
                 candle.low = _tick.last
+            }
+            if(_tick.hasOwnProperty('BTCVol')){
+    
+                endBTCVol = ((startBTCVol-_tick.BTCVol)>endBTCVol) ? startBTCVol-_tick.BTCVol : endBTCVol;
+                candle.BTCVol = endBTCVol;
             }
             if (!_tick.hasOwnProperty('volume')) {
                 candle.volume = -1;
-            }
-            ;
+            };
             candle.timestamp = _tick.timestamp;
             processedTicks++;
         }
         candle.mid = candle.mid / processedTicks;
         candle.bid = candle.bid / processedTicks;
         candle.ask = candle.ask / processedTicks;
+        candle.formatedTime=moment(candle.timestamp).format('YYYY-MM-DD HH:mm:ss');
         candle.close = _tick.last;
         
         return candle;
@@ -166,6 +175,7 @@ const MAB = {
                         if (relativeMarginTime >= 0.95 && relativeMarginTime <= 1.1) {
                             var candle = MAB.createCandle(tickAccumulator, config.timeframes[index]);
                             addCandle(exchange, market, config.timeframes[index], candle);
+                            
                             tickAccumulator = [], timestampCount = 0;
                             nb = 0;
                         }
@@ -177,7 +187,34 @@ const MAB = {
             // return;
             // }
         }
-        cl(tickHistory.length);
+        // cl(tickHistory);
+    },
+    performCalculation:function () {
+        for(var exchangeName in MAB.database){
+            if(exchangeName=="initiated" || exchangeName=="lastSync"){
+                
+            }else{
+                var exchange = MAB.database[exchangeName];
+                for(var marketName in exchange.markets){
+                    var market = exchange.markets[marketName];
+                    for(var timeframeName in market.history){
+                        var timeframe = market.history[timeframeName]
+                        
+                        cl(timeframeName, Object.keys(timeframe).length);
+                        for(var i =0; i<Object.keys(timeframe).length; i++){
+                            var tickName = Object.keys(timeframe)[i];
+                            var lastName = Object.keys(timeframe)[i-1] || tickName;
+                            
+                            var tick = timeframe[tickName];
+                            var lastTick = timeframe[lastName];
+                            // cl(tick.last, timeframe[Object.keys(timeframe)[i-1]])
+                            tick.techIndic.change= tick.last - lastTick.last;
+                        }
+                    }
+                }
+            }
+        }
+        cl(MAB.database['poloniex'].markets['BTC_XMR'].history['5m']);
     }
 };
 module.exports = MAB;

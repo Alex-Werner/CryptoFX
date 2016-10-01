@@ -15,14 +15,16 @@ seneca.listen({
 seneca.ready(function () {
     cl("MIB LOADED");    
     seneca.add({role: 'MIB', store: 'ticker'}, function (request, reply) {
-        cl(moment().format('HH:mm:ss')+"Added"+request.pair+"-"+request.exchange+" last:"+request.last);
-        if(request.pair && request.exchange && request.ask && request.last && request.bid){
+        if(request.pair && request.exchange && request.ask && request.last && request.bid && request.BTCVol){
+            cl(moment().format('HH:mm:ss')+"Added"+request.pair+"-"+request.exchange+" last:"+request.last);
+    
             MIB.populate('ticker',{
                 pair:request.pair,
                 exchange:request.exchange,
                 last:request.last,
                 bid:request.bid,
-                ask:request.ask
+                ask:request.ask,
+                BTCVol: request.BTCVol
             });
             reply(null, {response: "Done", dbSize:MIB.getDatabaseSize()})
         }
