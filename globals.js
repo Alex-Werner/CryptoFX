@@ -41,6 +41,18 @@ var Globals = {
         }
         return arguments;
     },
+    ce:function(){
+        if(arguments.length==0){
+            var t = new Date().getTime();
+            console.error(t);
+            return t;
+        }
+        console.error.apply(console, arguments);
+        if(arguments.length==1){
+            return arguments[0];
+        }
+        return arguments;
+    }
     // async:require('asyncawait/async'),
     // await:require('asyncawait/await'),
     // Promise:require('bluebird')

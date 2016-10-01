@@ -43,6 +43,14 @@ To be born :
 - WalletManager : Able to handle Wallet (virtual ?)
 - CryptoStrategist : Understand strategy and signals.
 
+
+## Markets Exchanges handled : 
+
+- Bittrex : Honestly, It could work... But there is an issues with caching that is not resolved yet. 
+So consider it hown. 
+- Poloniex : Upcoming Prio 1! (refresh every 30s seems good !) 
+- Kraken : Upcoming Prio 2! 
+
 ## Main Features implemented
 
 * Get data (fetch) from Bittrex API

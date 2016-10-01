@@ -8,10 +8,6 @@ var await = require('asyncawait/await');
 //https://bittrex.com/Home/Api
 var bittrexApiUrl = "https://bittrex.com/api/v1.1/";
 
-var requester = {
-    
-};
-
 var Bittrex = {
     _get:function(url){
         return new Promise(function(resolve, reject){
