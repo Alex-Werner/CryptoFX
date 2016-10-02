@@ -197,24 +197,93 @@ const MAB = {
                 var exchange = MAB.database[exchangeName];
                 for(var marketName in exchange.markets){
                     var market = exchange.markets[marketName];
-                    for(var timeframeName in market.history){
+                    for(var i=0; i<Object.keys(market.history).length; i++){
+                        
+                        var timeframeName = Object.keys(market.history)[i];
                         var timeframe = market.history[timeframeName]
                         
                         cl(timeframeName, Object.keys(timeframe).length);
-                        for(var i =0; i<Object.keys(timeframe).length; i++){
-                            var tickName = Object.keys(timeframe)[i];
-                            var lastName = Object.keys(timeframe)[i-1] || tickName;
+                        for(var j =0; j<Object.keys(timeframe).length; j++){
+                            var tickName = Object.keys(timeframe)[j];
+                            var lastName = Object.keys(timeframe)[j-1] || tickName;
                             
                             var tick = timeframe[tickName];
                             var lastTick = timeframe[lastName];
+                            var lastTicksLength = Object.keys(timeframe).length;
+                            
                             // cl(tick.last, timeframe[Object.keys(timeframe)[i-1]])
+                            tick.techIndic.sma = {};
+                            // tick.techIndic.sma[10]=0;
+        
+                            if(lastTicksLength>10 && j>10){
+                                var sma=0;
+                                for(var k = 1;k<=10; k++){
+                                    sma+=parseFloat(timeframe[Object.keys(timeframe)[j-k]].last);
+                                }    
+                                sma = sma/10;
+                                tick.techIndic.sma[10]=sma;
+                            }
+                            if(lastTicksLength>20 && j>20){
+                                var sma=0;
+                                for(var k = 1;k<=20; k++){
+                                    sma+=parseFloat(timeframe[Object.keys(timeframe)[j-k]].last);
+                                }
+                                sma = sma/10;
+                                tick.techIndic.sma[20]=sma;
+                            }
+                            if(lastTicksLength>50 && j>50){
+                                var sma=0;
+                                for(var k = 1;k<=50; k++){
+                                    sma+=parseFloat(timeframe[Object.keys(timeframe)[j-k]].last);
+                                }
+                                sma = sma/50;
+                                tick.techIndic.sma[50]=sma;
+                            }
+                            if(lastTicksLength>100 && j>100){
+                                var sma=0;
+                                for(var k = 1;k<=100; k++){
+                                    sma+=parseFloat(timeframe[Object.keys(timeframe)[j-k]].last);
+                                }
+                                sma = sma/100;
+                                tick.techIndic.sma[100]=sma;
+                            }
+                            if(lastTicksLength>200 && j>200){
+                                var sma=0;
+                                for(var k = 1;k<=200; k++){
+                                    sma+=parseFloat(timeframe[Object.keys(timeframe)[j-k]].last);
+                                }
+                                sma = sma/200;
+                                tick.techIndic.sma[200]=sma;
+                                tick.techIndic.sma["200_50"]=(tick.techIndic.sma[50]/sma);
+                                tick.techIndic.sma["200_50_"]=(tick.techIndic.sma[50]/sma>1)? -1: 1;
+                            }
+                            
+                              
+                            tick.marketSignals = {
+                                largeDeathCross:false,
+                                largeGoldenCross:false
+                            };
+                            if(lastTick.techIndic.sma["200_50_"]!=tick.techIndic.sma["200_50_"]){
+                                if(tick.techIndic.sma["200_50_"]==-1){
+                                    tick.marketSignals.largeGoldenCross = true;
+                                }
+                                if(tick.techIndic.sma["200_50_"]==1){
+                                    tick.marketSignals.largeDeathCross = true;
+        
+                                }
+                            }
+                                                      
                             tick.techIndic.change= tick.last - lastTick.last;
                         }
                     }
                 }
             }
         }
-        cl(MAB.database['poloniex'].markets['BTC_XMR'].history['5m']);
+        
+        var h = MAB.database['poloniex'].markets['BTC_XMR'].history['20s'];
+        for(var i = 200; i<Object.keys(h).length; i++){
+            cl(h[Object.keys(h)[i]]);
+        }
     }
 };
 module.exports = MAB;
