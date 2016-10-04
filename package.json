@@ -26,6 +26,7 @@
     "bluebird": "^3.4.6",
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
+    "object.entries": "^1.0.3",
     "request": "^2.75.0",
     "requestify": "^0.2.3",
     "seneca": "^3.1.0",
