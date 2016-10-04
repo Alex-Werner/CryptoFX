@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "haha",
-    "test": "haha nope"
+    "test": "nodemon tests/tests.js --watch tests/tests.js --watch tests/ticksEMA.js --watch helpers/indicators.js"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
 CryptoFX
 
 ## Current State
-Pre-Alpha-unstable v0.0.1
+Pre-Alpha v0.1.0
 
 ## Overview
 
@@ -30,25 +30,29 @@ On windows :
  It will then open one CMD per node(microservices), theses microservices being connected by seneca 
 
 ## MicroServices 
+
+- FETCHER : Call API (see Markets) and send data to MIB
 - MIB : Mainly used as a tick store | HTTP : 12121
-- MAB : Mainly used to store analyzed tick. These ticks are stored using SmartAnalyst (Indicators:RSI, MACD...)
-- CARL : Not fully defined it will probably make a bridge between MIB and MAT for sometimes.
-- FETCHER : now it's calling bittrex API and send data to MIB.
+- MAB : Mainly used to store analyzed tick (Indicators, MarketSignals)
 
 To be born : 
 
-- PriceFetcher : Call API and send data to MIB
-- SmartAnalyst : Get data from MIB, analyze them, compute them in terms of tickframe and send it to MAB
+- ~~CARL : Main interface that will operate user needs~~
+- SmartAnalyst : 
+    At first launch, Get data from MIB, analyze them, compute them in terms of tickframe and send it to MAB
+    after that, periodically get misisng data from MIB and MAB.
 - TradingOperator : Able to Buy or Sell
 - WalletManager : Able to handle Wallet (virtual ?)
 - CryptoStrategist : Understand strategy and signals.
 
+## Critical TODO
+    - Implement databse !
+
 
 ## Markets Exchanges handled : 
 
-- Bittrex : Honestly, It could work... But there is an issues with caching that is not resolved yet. 
-So consider it hown. 
-- Poloniex : Upcoming Prio 1! (refresh every 30s seems good !) 
+- Bittrex : Honestly, It could work... But there is an issues with caching that is not resolved yet. So consider it down. 
+- Poloniex : Handled for Nth (configurated) top Market (30s between two ticks fetch)   
 - Kraken : Upcoming Prio 2! 
 
 ## Main Features implemented
@@ -56,6 +60,15 @@ So consider it hown.
 * Get data (fetch) from Bittrex API
 * Execute fetching at the next plain hours (will be useful for data analysis)
 * Populate tick in MIB Db.
+* Fetch tick from MIB to MAB
+* Create Candle (open, close, mid, bid, ask, last, low, high, BTCVol)
+* Calculate Technical Indicators:
+    - SMA(10), SMA(20), SMA(50), SMA(100), SMA(200)
+    - True stength index (25,13)
+    - EMA(27)
+* Calculate MarketSignals : 
+    - largeGoldenCross(200,50)
+    - largeDeathCross(200,50)
 
 ## Upcoming Features / Schedule
 

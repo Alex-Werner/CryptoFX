@@ -3,11 +3,15 @@ global['cl']=Globals.cl;
 
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
+Object.entries = require('object.entries');
+var _ = require('lodash');
 
 const describe = require('tape');
 const API = require('../API/api.js');
+const Indicators = require('../helpers/indicators.js');
 
 var testBittrexApi = false;
+var testIndicators = true;
 
 describe('Tape should work', (t) => {
     let nothing = true;
@@ -68,6 +72,70 @@ if(testBittrexApi){
             let getMarketHistory = await(API.bittrex.publicAPI.getMarketHistory(pair, "both"));
             t.equal(getMarketHistory.success, true);
             t.end();
+        })();
+    });
+}
+
+if(testIndicators){
+    var ticks = require('./ticksEMA.js');
+    
+    describe('Should calculate EMA with exact period values', (test) => {
+        return async(function(){
+            var period = 27;
+            var tickArr = Object.entries(ticks).slice(0, period);
+            cl("Tick arr is ", tickArr.length);
+    
+            var values = [];
+            tickArr.filter(function(tick){
+                values.push(tick[1].close);
+            });
+            
+            var options = {
+                period:period,
+                values:values
+            };
+            
+            var EMA = Indicators.EMA.calculate(options);
+            var supposedEMA = 27.29666667;
+            
+            test.equal(EMA, supposedEMA);
+            test.end();
+        })();
+    });
+    describe('Should calculate EMA with higher period values', (test) => {
+        return async(function(){
+            var period = 27;
+            var tickArr = Object.entries(ticks).slice(0, period+1);
+            cl("Tick arr is ", tickArr.length);
+            var values = [];
+            tickArr.filter(function(tick){
+                values.push(tick[1].close);
+            });
+            
+            var options = {
+                period:period,
+                values:values
+            };
+            var EMA = Indicators.EMA.calculate(options);
+            var supposedEMA = 27.33690476;
+            test.equal(EMA, supposedEMA);
+    
+            cl("Tick arr is ", tickArr.length);
+            
+            var tickArr = Object.entries(ticks).slice(0, period+3);
+            var values = [];
+            tickArr.filter(function(tick){
+                values.push(tick[1].close);
+            });
+            var options = {
+                period:period,
+                values:values
+            };
+            var EMA = Indicators.EMA.calculate(options);
+            var supposedEMA = 27.42243319;
+            test.equal(EMA, supposedEMA);
+    
+            test.end();
         })();
     });
 }

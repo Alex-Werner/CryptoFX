@@ -1,0 +1,35 @@
+var ticks = {
+    "11111110": {timeframe: "1d", close: 27.62},
+    "11111111": {timeframe: "1d", close: 27.25},
+    "11111112": {timeframe: "1d", close: 26.74},
+    "11111113": {timeframe: "1d", close: 26.69},
+    "11111114": {timeframe: "1d", close: 26.55},
+    "11111115": {timeframe: "1d", close: 26.7},
+    "11111116": {timeframe: "1d", close: 26.46},
+    "11111117": {timeframe: "1d", close: 26.83},
+    "11111118": {timeframe: "1d", close: 26.89},
+    "11111119": {timeframe: "1d", close: 27.21},
+    "11111120": {timeframe: "1d", close: 27.04},
+    "11111121": {timeframe: "1d", close: 27.25},
+    "11111122": {timeframe: "1d", close: 27.25},
+    "11111123": {timeframe: "1d", close: 27.15},
+    "11111124": {timeframe: "1d", close: 27.61},
+    "11111125": {timeframe: "1d", close: 27.63},
+    "11111126": {timeframe: "1d", close: 27.88},
+    "11111127": {timeframe: "1d", close: 27.91},
+    "11111129": {timeframe: "1d", close: 28.01},
+    "11111130": {timeframe: "1d", close: 27.85},
+    "11111138": {timeframe: "1d", close: 27.45},
+    "11111148": {timeframe: "1d", close: 27.93},
+    "11111158": {timeframe: "1d", close: 27.44},
+    "11111168": {timeframe: "1d", close: 27.5},
+    "11111178": {timeframe: "1d", close: 27.34},
+    "11111180": {timeframe: "1d", close: 27.28},
+    "11111181": {timeframe: "1d", close: 27.55},
+    "11111182": {timeframe: "1d", close: 27.86},
+    "11111183": {timeframe: "1d", close: 27.88},
+    "11111184": {timeframe: "1d", close: 28.03}
+    
+    
+}
+module.exports = ticks;
