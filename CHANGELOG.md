@@ -1,6 +1,6 @@
 ## Changelog
 
-# 0.1.0 - 29/09/2016
+# [0.1.0](https://github.com/Alex-Werner/CryptoFX/tree/0.1.0) - 29/09/2016
 * [Indicators] EMA, TSI, SMA
 * [MarketSignals] GoldenCross, DeathCross
 

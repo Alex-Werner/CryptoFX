@@ -1,25 +1,18 @@
 # ROADMAP
 
- |Version| GIT Tags |Expected  |Release Date|
- |-------|----------|----------|------------|
- | 1.0.0 |----------|01/01/2017|  |
- | 0.2.0 |----------|15/10/2016|  |
- | [0.1.0](https://github.com/Alex-Werner/CryptoFX/blob/master/CHANGELOG.md#010) | [0.1.0](https://github.com/Alex-Werner/CryptoFX/tree/0.1.0) |04/10/2016 |04/10/2016  |
- | [0.0.1](https://github.com/Alex-Werner/CryptoFX/blob/master/CHANGELOG.md#001) |----------|29/09/2016|29/09/2016  |
 
-
-## 1.0.0 
+## 1.0.0 - Expected : 01/01/2017
 * Ability to a trade in a specific market in a totally automated manner using MarketSignals combination
 * Ability to access to the CryptoFX Dashboard (separate Git Repo ?).
 * Ability to run specific configuration for each user.
 * Abiility to backtest.
  
-## 0.2.0
+## 0.2.0 - Expected : 15/10/2016
 * [DATABASES] One for MIB, one for MAB, One for users purpose.
 * Ability to past data from poloniex, 
 * Dissociate SmartAnalyst from MAB (which should only add candle from scratch or refreshing with new data).
 
-## 0.1.0
+## 0.1.0 (Since 04/10/2016: [0.1.0](https://github.com/Alex-Werner/CryptoFX/tree/0.1.0) )
 * [Indicators] EMA, TSI, SMA
 * [MarketSignals] GoldenCross, DeathCross
 

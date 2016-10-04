@@ -17,6 +17,13 @@ It should be able to automatize most of
 * ~~**ws** - Lightning fast websocket~~ (https://github.com/websockets/ws)
 * MongoDB/LokiJS (to be defined),actual : In-Mem db ? (https://www.mongodb.com / lokijs.org)
 
+#### Quick access :
+
+-  [Documentation](DOCUMENTATION.md)
+-  [Changelog](CHANGELOG.md)
+-  [Roadmap](ROADMAP.md)
+-  [NPM Package file](package.json)
+
 ## Install
 ```npm install```
 
