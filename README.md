@@ -107,13 +107,14 @@ For any help or questions you can contact me by twitter : @obusco.
 
 ## Licence
 
-This work is licensed under the Creative Commons
-Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-To view a copy of this license, visit
-http://creativecommons.org/licenses/by-nc-nd/3.0/.
+This work is licensed under the Mozilla Public License Version 2.0
 
-## Licence details
-
-This is a temporary decision, I want to offer a way to people (especially beginner developer), to consult the code behind
-CryptoFX, but as I don't know yet where I want to go with this project, I want to protect myself a little.
-If I can afford it, the main goal is to made it open-source and as permissive as possible.
+| Permissions      	| Conditions                   	| Limitations   	|
+|------------------	|------------------------------	|---------------	|
+| * Commercial Use 	| Disclose Source              	| Hold Liable   	|
+| Distribution     	| License and Copyright Notice 	| Trademark Use 	|
+| Modification     	| Same License                 	|               	|
+| Patent Use       	|                              	|               	|
+| Private Use      	|                              	|               	|
+|                  	|                              	|               	|
+|                  	|                              	|               	|
