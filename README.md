@@ -22,6 +22,7 @@ It should be able to automatize most of
 -  [Documentation](DOCUMENTATION.md)
 -  [Changelog](CHANGELOG.md)
 -  [Roadmap](ROADMAP.md)
+-  [ToDos](ROADMAP.md#todos)
 -  [NPM Package file](package.json)
 
 ## Install
