@@ -109,12 +109,10 @@ For any help or questions you can contact me by twitter : @obusco.
 
 This work is licensed under the Mozilla Public License Version 2.0
 
-| Permissions      	| Conditions                   	| Limitations   	|
-|------------------	|------------------------------	|---------------	|
-| * Commercial Use 	| Disclose Source              	| Hold Liable   	|
-| Distribution     	| License and Copyright Notice 	| Trademark Use 	|
-| Modification     	| Same License                 	|               	|
-| Patent Use       	|                              	|               	|
-| Private Use      	|                              	|               	|
-|                  	|                              	|               	|
-|                  	|                              	|               	|
+| Permissions               	| Conditions                                    	| Limitations   	|
+|---------------------------	|-----------------------------------------------	|---------------	|
+| :green_heart: Commercial Use 	| :grey_exclamation: Disclose Source              	| :broken_heart: Hold Liable   	|
+| :green_heart: Distribution  	| :grey_exclamation: License and Copyright Notice 	| :broken_heart: Trademark Use 	|
+| :green_heart: Modification   	| :grey_exclamation: Same License                 	|               	|
+| :green_heart:  Patent Use    	|                                                 	|               	|
+| :green_heart: Private Use    	|                                                 	|               	|
