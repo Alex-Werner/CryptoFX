@@ -2,6 +2,7 @@
 
 ## 2.0.0 - Expected : Before end 2017 ? 
 * CryptoFX-Mobile : Using Onsen, Cordova and Angular ? 
+* Use the lending system in order to gain benefit can expect a 0.02% rate for 2Days (If i made this [Spreadsheets](https://docs.google.com/spreadsheets/d/1k1xu97SYNyJL7alMIsPpcDy87L3-fM_KLuZmwXlvrMY/edit?usp=sharing) right, it can be profitable)
 
 ## 1.0.0 - Expected : 01/01/2017
 * Ability to a trade in a specific market in a totally automated manner using MarketSignals combination
