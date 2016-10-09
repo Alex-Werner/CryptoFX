@@ -229,15 +229,10 @@ var performAsync = function (commands, values) {
     })
 };
 var getTopVolume = function (object, topNumber) {
+    var object = object.body;
     var markets = _.each(object, function(obj,marketName){
         var  marketNames = marketName.split('_');
-        if(marketNames[0]=="BTC"){
-            obj.BTCVol =Number(object[marketName].baseVolume);
-            // obj.BTCVol=0;
-        }
-        if(marketNames[1]=="BTC"){
-            obj.BTCVol=Number(object[marketName].quoteVolume)
-        }
+        obj.BTCVol = (marketNames[0]=="BTX") ? (object[marketName].baseVolume) : (object[marketName].quoteVolume);
     });
     
     var topVolume = [];    
@@ -281,7 +276,7 @@ var startPoloniexFetch = function () {
         cl("Executed fetch at ", moment().format('YYYY-MM-DD HH:mm:ss'));
         getAllTicks()
             .then(function (response) {
-                var result = JSON.parse(response);
+                var result = (response);
                 if (config.markets.poloniex.fetchTop) {
                     if (config.markets.poloniex.fetchTop/toString() == "true") {
                         config.markets.poloniex.fetchTop = 10;

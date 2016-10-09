@@ -247,77 +247,84 @@ const MAB = {
                             var lastName = lastNtickName(1) || tickName;
                             var lastTick = tickList[lastName];
                             
-                            tick.techIndic.change = tick.last - lastTick.last;
-                            
-                            tick.techIndic.sma = {};
-                            tick.techIndic.sma[10] = Indicators.SMA.calculate({
-                                period: 10,
-                                values: prepareValuesForCalculation(10, tickList, tickIndex)
-                            });
-                            tick.techIndic.sma[20] = Indicators.SMA.calculate({
-                                period: 20,
-                                values: prepareValuesForCalculation(20, tickList, tickIndex)
-                            });
-                            tick.techIndic.sma[50] = Indicators.SMA.calculate({
-                                period: 50,
-                                values: prepareValuesForCalculation(50, tickList, tickIndex)
-                            });
-                            tick.techIndic.sma[100] = Indicators.SMA.calculate({
-                                period: 100,
-                                values: prepareValuesForCalculation(100, tickList, tickIndex)
-                            });
-                            tick.techIndic.sma[200] = Indicators.SMA.calculate({
-                                period: 200,
-                                values: prepareValuesForCalculation(200, tickList, tickIndex)
-                            });
-                            tick.techIndic.sma['bullBurst'] = false;
-                            tick.techIndic.sma['bearBurst'] = false;
-                            
-                            if (tickIndex == 200 + 1) {
-                                if (tick.techIndic.sma[50] > tick.techIndic.sma[200]) {
-                                    if (tickList[lastNtickName(1)].techIndic.sma[50] == tickList[lastNtickName(1)].techIndic.sma[200]) {
-                                        if (tickList[lastNtickName(2)].techIndic.sma[50] < tickList[lastNtickName(2)].techIndic.sma[200]) {
+                            var calculateTechIndic = function () {
+                                tick.techIndic.change = tick.last - lastTick.last;
+    
+                                tick.techIndic.sma = {};
+                                tick.techIndic.sma[10] = Indicators.SMA.calculate({
+                                    period: 10,
+                                    values: prepareValuesForCalculation(10, tickList, tickIndex)
+                                });
+                                tick.techIndic.sma[20] = Indicators.SMA.calculate({
+                                    period: 20,
+                                    values: prepareValuesForCalculation(20, tickList, tickIndex)
+                                });
+                                tick.techIndic.sma[50] = Indicators.SMA.calculate({
+                                    period: 50,
+                                    values: prepareValuesForCalculation(50, tickList, tickIndex)
+                                });
+                                tick.techIndic.sma[100] = Indicators.SMA.calculate({
+                                    period: 100,
+                                    values: prepareValuesForCalculation(100, tickList, tickIndex)
+                                });
+                                tick.techIndic.sma[200] = Indicators.SMA.calculate({
+                                    period: 200,
+                                    values: prepareValuesForCalculation(200, tickList, tickIndex)
+                                });
+                                tick.techIndic.sma['bullBurst'] = false;
+                                tick.techIndic.sma['bearBurst'] = false;
+    
+                                if (tickIndex == 200 + 1) {
+                                    if (tick.techIndic.sma[50] > tick.techIndic.sma[200]) {
+                                        if (tickList[lastNtickName(1)].techIndic.sma[50] == tickList[lastNtickName(1)].techIndic.sma[200]) {
+                                            if (tickList[lastNtickName(2)].techIndic.sma[50] < tickList[lastNtickName(2)].techIndic.sma[200]) {
+                                                tick.techIndic.sma['bullBurst'] = true;
+                                            }
+                                        }
+                                        if (tickList[lastNtickName(1)].techIndic.sma[50] < tickList[lastNtickName(1)].techIndic.sma[200]) {
                                             tick.techIndic.sma['bullBurst'] = true;
                                         }
                                     }
-                                    if (tickList[lastNtickName(1)].techIndic.sma[50] < tickList[lastNtickName(1)].techIndic.sma[200]) {
-                                        tick.techIndic.sma['bullBurst'] = true;
-                                    }
-                                }
-                                if (tick.techIndic.sma[50] < tick.techIndic.sma[200]) {
-                                    if (tickList[lastNtickName(1)].techIndic.sma[50] == tickList[lastNtickName(1)].techIndic.sma[200]) {
-                                        if (tickList[lastNtickName(2)].techIndic.sma[50] > tickList[lastNtickName(2)].techIndic.sma[200]) {
-                                            tick.techIndic.sma['bearBurst'] = true;
+                                    if (tick.techIndic.sma[50] < tick.techIndic.sma[200]) {
+                                        if (tickList[lastNtickName(1)].techIndic.sma[50] == tickList[lastNtickName(1)].techIndic.sma[200]) {
+                                            if (tickList[lastNtickName(2)].techIndic.sma[50] > tickList[lastNtickName(2)].techIndic.sma[200]) {
+                                                tick.techIndic.sma['bearBurst'] = true;
+                                            }
                                         }
+                                        if (tickList[lastNtickName(1)].techIndic.sma[50] > tickList[lastNtickName(1)].techIndic.sma[200]) {
+                                            tick.techIndic.sma['bullBurst'] = true;
+                                        }
+            
                                     }
-                                    if (tickList[lastNtickName(1)].techIndic.sma[50] > tickList[lastNtickName(1)].techIndic.sma[200]) {
-                                        tick.techIndic.sma['bullBurst'] = true;
-                                    }
-                                    
+        
                                 }
-                                
-                            }
-                            if(tick.techIndic.sma['bullBurst'] || tick.techIndic.sma['bearBurst']){
-                                cl("OUIIII!!");
-                                cl(tick, lastTick);
-                            }
-                            
-                            
-                            tick.techIndic.tsi = Indicators.TSI.calculate({
-                                longPeriod: 25,
-                                shortPeriod:13,
-                                values: prepareValuesForCalculation(50, tickList, tickIndex)
-                            });
-                            
-                            tick.techIndic.ema = {};
-                            tick.techIndic.ema[27] = Indicators.EMA.calculate({
-                                period: 27,
-                                values: prepareValuesForCalculation(28, tickList, tickIndex)
-                            });
-                            
-                            tick.marketSignals = {};
-                            tick.marketSignals.largeGoldenCross = (tick.techIndic.sma['bullBurst']);
-                            tick.marketSignals.largeDeathCross = (tick.techIndic.sma['bearBurst']);
+                                if(tick.techIndic.sma['bullBurst'] || tick.techIndic.sma['bearBurst']){
+                                    cl("OUIIII!!");
+                                    cl(tick, lastTick);
+                                }
+    
+    
+                                tick.techIndic.tsi = Indicators.TSI.calculate({
+                                    longPeriod: 25,
+                                    shortPeriod:13,
+                                    values: prepareValuesForCalculation(50, tickList, tickIndex)
+                                });
+    
+                                tick.techIndic.ema = {};
+                                tick.techIndic.ema[27] = Indicators.EMA.calculate({
+                                    period: 27,
+                                    values: prepareValuesForCalculation(28, tickList, tickIndex)
+                                });
+                            };
+                            calculateMarketSignals = function () {
+    
+                                tick.marketSignals = {};
+                                tick.marketSignals.largeGoldenCross = (tick.techIndic.sma['bullBurst']);
+                                tick.marketSignals.largeDeathCross = (tick.techIndic.sma['bearBurst']);
+    
+                            };
+                            calculateTechIndic();
+                            calculateMarketSignals();                                        
                             
                             // var calculIndicatorWithSpecificLastTicksLength = function(maxLastTicksLength, actualLastTickLength,tickIndex, indicator){
                             //     var handledIndicator = ['sma','priceChange'];
