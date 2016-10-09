@@ -3,6 +3,8 @@ CryptoFX
 ## Current State
 Pre-Alpha v0.1.0
 
+Open to any collaborators, help, advice, code review, issue, insult, critism, hugs or beer :)
+
 ## Overview
 
 The main goal of CryptoFX is to allow create a trading online based and social platform.

@@ -28,7 +28,9 @@
 # Todos 
 
 ## 0.2.0
-
+- [ ] Make MIB a candle store and not a tick store anymore
+- [ ] Being able to handle tick or candle as an import way
+- [ ] MarketExchange : BTC China as it has it's allow import data
 - [ ] External API for CryptoFX Front
 - [ ] Make Candle creator Generic
 - [ ] Dissociate SmartAnalyst from MAB
