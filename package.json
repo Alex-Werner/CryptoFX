@@ -4,7 +4,7 @@
   "description": "Fun stuff inside",
   "main": "main.js",
   "scripts": {
-    "start": "haha",
+    "start": "node main.js",
     "test": "nodemon tests/tests.js --watch tests/tests.js --watch tests/ticksEMA.js --watch helpers/indicators.js"
   },
   "repository": {

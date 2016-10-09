@@ -34,7 +34,9 @@ It should be able to automatize most of
 ```node tests/test.js```
 
 ## Start 
-On windows :
+* With the starter module : ```npm start``` or ```node main.js```   
+* Separate Microservices : 
+ * On windows :
  - Navigate to root ```cd CryptoFX```
  - Start CMD (from root) ```"bin/win/start_all.bat"
  It will then open one CMD per node(microservices), theses microservices being connected by seneca 
