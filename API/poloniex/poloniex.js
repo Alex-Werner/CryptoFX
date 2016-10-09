@@ -12,20 +12,26 @@ var configurationData = {
 };
 const Poloniex = {
     _config: configurationData,
-    _getPublicCall: function (command) {
-        var allowedCommand = ['returnTicker'];
+    _getPublicCall: function (command, params) {
+        var allowedCommand = ['returnTicker','returnChartData'];
         return new Promise(function (resolve, reject) {
             if (allowedCommand.indexOf(command) > -1) {
                 var url = Poloniex._config.publicAPIUrl + "?command=" + command;
+                if(params){
+                    for(var paramsName in params){
+                        url = url+"&"+paramsName+"="+params[paramsName];
+                    }
+                }
                 request.get(url, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        return resolve(body);
+                        return resolve({body:JSON.parse(body), params:params, command:command, url:url});
                     } else {
                         return reject(response);
                     }
                 });
             } else {
                 return reject('Bad command');
+    
             }
             
         });
@@ -36,6 +42,15 @@ const Poloniex = {
      */
     getTickers: function () {
         return Poloniex._getPublicCall('returnTicker');
+    },
+    
+    getHistoricData:function(currencyPair, startUnixSeconds, endUnixSeconds, periodSeconds){
+        return (Poloniex._getPublicCall('returnChartData',{
+            currencyPair:currencyPair || "BTC_XMR",
+            start:startUnixSeconds || (moment().subtract(1,'days').unix()),
+            end:endUnixSeconds || (moment().unix()),
+            period:periodSeconds || (86400)
+        }));
     }
     
 };
