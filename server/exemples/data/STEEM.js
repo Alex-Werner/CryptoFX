@@ -1,0 +1,1 @@
+module.exports ={"success":true,"message":"","result":null}

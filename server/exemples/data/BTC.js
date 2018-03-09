@@ -1,0 +1,1 @@
+module.exports ={"success":false,"message":"INVALID_MARKET","result":null}
